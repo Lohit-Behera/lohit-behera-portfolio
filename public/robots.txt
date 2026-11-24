@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /lohit-behera-portfolio/print/
+
+Sitemap: https://lohit-behera.github.io/lohit-behera-portfolio/sitemap-index.xml

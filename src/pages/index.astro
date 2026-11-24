@@ -1,0 +1,240 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import { person, products, aiWork, sideProjects, services, mvpOffer, skills, experience, education, stats } from '../data/site';
+import bhandar from '../assets/projects/bhandar.png';
+import easeva from '../assets/projects/easeva.png';
+import rachna from '../assets/projects/rachna.png';
+import daybook from '../assets/projects/daybook.png';
+const shots: Record<string, ImageMetadata> = { bhandar, easeva, rachna, daybook };
+const nav = [
+  ['Work', '#work'], ['AI', '#ai'], ['Services', '#services'], ['Skills', '#skills'], ['Experience', '#experience'], ['Contact', '#contact'],
+];
+const mailto = `mailto:${person.email}?subject=${encodeURIComponent('Project enquiry')}`;
+---
+<Layout
+  title="Lohit Sekhar Behera – Freelance Full Stack & AI Engineer (RAG, LLM, Web, Mobile)"
+  description="Freelance Full Stack & AI Engineer in Bhubaneswar, India. RAG chatbots, LLM pipelines, MCP workflows, full-stack web apps, native iOS & Android apps and Tauri desktop apps for clients worldwide."
+>
+  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:bg-white focus:px-4 focus:py-2 focus:rounded-lg">Skip to content</a>
+
+  <header class="sticky top-0 z-40 border-b border-white/10 bg-ink/85 backdrop-blur text-slate-200">
+    <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3">
+      <a href="#top" class="flex items-center gap-2 font-semibold text-white">
+        <span class="grid h-8 w-8 place-items-center rounded-lg bg-accent text-sm font-bold">LB</span>
+        <span class="hidden sm:inline">Lohit Behera</span>
+      </a>
+      <nav aria-label="Primary" class="hidden md:block">
+        <ul class="flex gap-6 text-sm">
+          {nav.map(([l, h]) => <li><a href={h} class="hover:text-white">{l}</a></li>)}
+        </ul>
+      </nav>
+      <a href="#contact" class="rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-ink hover:bg-indigo-100">Hire me</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- HERO -->
+    <section id="top" class="relative overflow-hidden bg-ink text-slate-300">
+      <div aria-hidden="true" class="pointer-events-none absolute inset-0 bg-[radial-gradient(60rem_30rem_at_80%_-10%,rgba(79,70,229,.45),transparent),radial-gradient(40rem_25rem_at_0%_110%,rgba(13,148,136,.35),transparent)]"></div>
+      <div class="relative mx-auto grid max-w-6xl items-center gap-12 px-5 py-20 md:grid-cols-[1.25fr_1fr] md:py-28">
+        <div>
+          <p class="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-xs font-medium text-emerald-300">
+            <span class="h-2 w-2 rounded-full bg-emerald-400"></span> Open to freelance projects worldwide
+          </p>
+          <h1 class="mt-5 text-4xl font-extrabold tracking-tight text-white sm:text-6xl">{person.name}</h1>
+          <p class="mt-3 text-xl font-semibold text-indigo-300 sm:text-2xl">{person.title}</p>
+          <p class="mt-2 text-base text-slate-400">{person.tagline}</p>
+          <p class="mt-6 max-w-xl text-lg leading-relaxed text-slate-300">{person.oneLiner}</p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a href="#contact" class="rounded-full bg-accent px-6 py-3 font-semibold text-white shadow-lg shadow-indigo-900/40 hover:bg-indigo-500">Hire me</a>
+            <a href={mailto} class="rounded-full border border-white/20 px-6 py-3 font-semibold text-white hover:bg-white/10">{person.email}</a>
+          </div>
+          <p class="mt-6 text-sm text-slate-400">{person.location} · {person.timezone} · Clients worldwide, including India</p>
+        </div>
+        <div class="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm sm:p-8">
+          <p class="text-xs font-semibold uppercase tracking-widest text-indigo-300">By the numbers</p>
+          <dl class="mt-5 grid grid-cols-2 gap-x-6 gap-y-7">
+            {stats.map((st) => (
+              <div>
+                <dt class="sr-only">{st.label}</dt>
+                <dd class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">{st.value}</dd>
+                <dd class="mt-1 text-sm leading-snug text-slate-300">{st.label}</dd>
+              </div>
+            ))}
+          </dl>
+          <p class="mt-6 border-t border-white/10 pt-4 text-sm text-slate-300">Also: RAG · MCP · Tauri desktop apps · native iOS &amp; Android</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="work" aria-labelledby="work-h" class="mx-auto max-w-6xl px-5 py-20">
+      <p class="text-sm font-semibold uppercase tracking-widest text-accent">Selected work</p>
+      <h2 id="work-h" class="mt-2 text-3xl font-bold tracking-tight text-ink sm:text-4xl">Products I built at Asemita</h2>
+      <p class="mt-3 max-w-2xl text-slate-600">Four products I built at <a class="font-medium text-accent underline-offset-4 hover:underline" href="https://asemita.com">Asemita Technologies</a>, a Bhubaneswar software company: everyday apps for shops, households and small teams, on the web and as native iOS and Android apps.</p>
+      <div class="mt-10 grid gap-8 md:grid-cols-2">
+        {products.map((p) => (
+          <article class="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-lg">
+            <a href={p.url} class="block overflow-hidden border-b border-slate-200 bg-slate-100" aria-label={`Visit ${p.name}`}>
+              <Image src={shots[p.slug]} alt={`${p.name} website home page`} widths={[480, 720, 960]} sizes="(min-width: 768px) 560px, 100vw" class="aspect-[16/10] w-full object-cover object-top transition duration-500 group-hover:scale-[1.02]" />
+            </a>
+            <div class="flex flex-1 flex-col p-6">
+              <div class="flex flex-wrap items-baseline justify-between gap-2">
+                <h3 class="text-2xl font-bold text-ink">{p.name}</h3>
+                <span class="text-xs font-medium text-slate-500">{p.platforms}</span>
+              </div>
+              <p class="mt-1 text-sm font-semibold text-accent-2">{p.kind}</p>
+              <p class="mt-3 text-slate-600">{p.summary}</p>
+              <ul class="mt-4 space-y-1.5 text-sm text-slate-600">
+                {p.points.map((pt) => <li class="flex gap-2"><span aria-hidden="true" class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent"></span>{pt}</li>)}
+              </ul>
+              <div class="mt-auto flex flex-wrap gap-2 pt-5 text-sm">
+                <a href={p.url} class="rounded-full bg-ink px-4 py-1.5 font-medium text-white hover:bg-slate-700">Visit site<span class="sr-only"> of {p.name}</span></a>
+                {p.stores.map((s) => <a href={s.href} class="rounded-full border border-slate-300 px-4 py-1.5 font-medium text-slate-700 hover:border-accent hover:text-accent">{s.label}<span class="sr-only"> – {p.name}</span></a>)}
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- AI WORK -->
+    <section id="ai" aria-labelledby="ai-h" class="bg-slate-50 py-20">
+      <div class="mx-auto max-w-6xl px-5">
+        <p class="text-sm font-semibold uppercase tracking-widest text-accent">AI work</p>
+        <h2 id="ai-h" class="mt-2 text-3xl font-bold tracking-tight text-ink sm:text-4xl">LLM systems running in production</h2>
+        <p class="mt-3 max-w-2xl text-slate-600">Retrieval, tool use and document understanding: the AI systems I have built for real products and users.</p>
+        <div class="mt-10 grid gap-6 md:grid-cols-3">
+          {aiWork.map((a) => (
+            <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+              <p class="text-2xl font-extrabold text-accent">{a.metric}</p>
+              <h3 class="mt-2 text-lg font-bold text-ink">{a.title}</h3>
+              <p class="mt-3 text-sm leading-relaxed text-slate-600">{a.body}</p>
+              <ul class="mt-4 flex flex-wrap gap-1.5" aria-label="Technologies">
+                {a.tags.map((t) => <li class="rounded-md bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700">{t}</li>)}
+              </ul>
+            </article>
+          ))}
+        </div>
+        <h3 class="mt-14 text-xl font-bold text-ink">Open-source side projects</h3>
+        <div class="mt-5 grid gap-6 md:grid-cols-[1.6fr_1fr]">
+          {sideProjects.map((s, i) => (
+            <article class={`rounded-2xl p-6 ${i === 0 ? 'bg-ink text-slate-300' : 'border border-slate-200 bg-white text-slate-600'}`}>
+              <div class="flex flex-wrap items-baseline justify-between gap-2">
+                <h4 class={`text-2xl font-bold ${i === 0 ? 'text-white' : 'text-ink'}`}>{s.name}</h4>
+                <a href={s.href} class={`text-sm font-medium underline-offset-4 hover:underline ${i === 0 ? 'text-indigo-300' : 'text-accent'}`}>View on GitHub<span class="sr-only"> – {s.name}</span></a>
+              </div>
+              <p class={`mt-1 text-sm font-semibold ${i === 0 ? 'text-teal-300' : 'text-accent-2'}`}>{s.kind}</p>
+              <p class="mt-3 text-sm leading-relaxed">{s.body}</p>
+              <ul class="mt-4 flex flex-wrap gap-1.5" aria-label="Technologies">
+                {s.tags.map((t) => <li class={`rounded-md px-2 py-0.5 text-xs font-medium ${i === 0 ? 'bg-white/10 text-indigo-100' : 'bg-indigo-50 text-indigo-700'}`}>{t}</li>)}
+              </ul>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services" aria-labelledby="services-h" class="mx-auto max-w-6xl px-5 py-20">
+      <p class="text-sm font-semibold uppercase tracking-widest text-accent">Services</p>
+      <h2 id="services-h" class="mt-2 text-3xl font-bold tracking-tight text-ink sm:text-4xl">What I can build for you</h2>
+      <p class="mt-3 max-w-2xl text-slate-600">Start small with a fixed-price starter offer, or scope a full product together.</p>
+      <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {services.map((s) => (
+          <article class="flex flex-col rounded-2xl border border-slate-200 p-6">
+            <h3 class="text-lg font-bold text-ink">{s.title}</h3>
+            <p class="mt-2 text-sm text-slate-600">{s.body}</p>
+            <div class="mt-auto pt-5">
+              <div class="rounded-xl bg-indigo-50 p-4">
+                <p class="text-xs font-semibold uppercase tracking-wider text-indigo-700">Starter offer</p>
+                <p class="mt-1 text-sm font-medium text-ink">{s.offer}</p>
+                <p class="mt-2 text-lg font-bold text-accent">{s.price}</p>
+                <p class="text-xs text-slate-600">{s.time}</p>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+      <div class="mt-8 flex flex-col items-start justify-between gap-4 rounded-2xl bg-gradient-to-r from-accent to-accent-2 p-8 text-white md:flex-row md:items-center">
+        <div>
+          <h3 class="text-2xl font-bold">{mvpOffer.title}</h3>
+          <p class="mt-2 max-w-2xl text-indigo-50">{mvpOffer.body}</p>
+        </div>
+        <a href={mailto} class="shrink-0 rounded-full bg-white px-6 py-3 font-semibold text-ink hover:bg-indigo-50">Get a quote</a>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills" aria-labelledby="skills-h" class="bg-slate-50 py-20">
+      <div class="mx-auto max-w-6xl px-5">
+        <p class="text-sm font-semibold uppercase tracking-widest text-accent">Skills</p>
+        <h2 id="skills-h" class="mt-2 text-3xl font-bold tracking-tight text-ink sm:text-4xl">Tools I work with</h2>
+        <div class="mt-10 grid gap-6 md:grid-cols-2">
+          {skills.map((g) => (
+            <div class="rounded-2xl border border-slate-200 bg-white p-6">
+              <h3 class="font-bold text-ink">{g.group}</h3>
+              <ul class="mt-4 flex flex-wrap gap-2">
+                {g.items.map((i) => <li class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-sm text-slate-700">{i}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience" aria-labelledby="exp-h" class="mx-auto max-w-6xl px-5 py-20">
+      <p class="text-sm font-semibold uppercase tracking-widest text-accent">Experience</p>
+      <h2 id="exp-h" class="mt-2 text-3xl font-bold tracking-tight text-ink sm:text-4xl">Where I've been building</h2>
+      <div class="mt-10 grid gap-10 lg:grid-cols-[2fr_1fr]">
+        <ol class="relative space-y-8 border-l-2 border-indigo-100 pl-6">
+          {experience.map((e) => (
+            <li class="relative">
+              <span aria-hidden="true" class="absolute -left-[33px] top-1.5 h-4 w-4 rounded-full border-4 border-white bg-accent"></span>
+              <div class="flex flex-wrap items-baseline justify-between gap-2">
+                <h3 class="text-lg font-bold text-ink">{e.role} <span class="font-medium text-slate-500">· {e.org}</span></h3>
+                <p class="text-sm text-slate-500">{e.period}</p>
+              </div>
+              <ul class="mt-2 space-y-1 text-sm text-slate-600">
+                {e.points.map((pt) => <li class="flex gap-2"><span aria-hidden="true" class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-400"></span>{pt}</li>)}
+              </ul>
+            </li>
+          ))}
+        </ol>
+        <div>
+          <h3 class="text-lg font-bold text-ink">Education</h3>
+          <ul class="mt-4 space-y-4">
+            {education.map((ed) => (
+              <li class="rounded-xl border border-slate-200 p-4">
+                <p class="font-semibold text-ink">{ed.degree}</p>
+                <p class="text-sm text-slate-600">{ed.school}</p>
+                <p class="text-xs text-slate-500">{ed.period}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" aria-labelledby="contact-h" class="bg-ink py-20 text-slate-300">
+      <div class="mx-auto max-w-4xl px-5 text-center">
+        <p class="text-sm font-semibold uppercase tracking-widest text-indigo-300">Contact</p>
+        <h2 id="contact-h" class="mt-2 text-3xl font-bold tracking-tight text-white sm:text-5xl">Have a project in mind?</h2>
+        <p class="mx-auto mt-4 max-w-2xl text-lg">Tell me what you want to build and your timeline. I work from India ({person.timezone}) with clients worldwide.</p>
+        <a href={mailto} class="mt-8 inline-block rounded-full bg-accent px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-indigo-900/50 hover:bg-indigo-500">{person.email}</a>
+        <ul class="mt-8 flex flex-wrap justify-center gap-6 text-sm">
+          <li><a href={person.github} class="hover:text-white">GitHub</a></li>
+          <li><a href={person.linkedin} class="hover:text-white">LinkedIn</a></li>
+          <li>{person.location}</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-white/10 bg-ink py-6 text-center text-xs text-slate-400">
+    © {new Date().getFullYear()} {person.name}. Product names and screenshots belong to Asemita Technologies.
+  </footer>
+</Layout>

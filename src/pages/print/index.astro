@@ -1,0 +1,180 @@
+---
+// Print-only page used to generate the PDF portfolio (noindex, excluded from sitemap).
+import { Image } from 'astro:assets';
+import Layout from '../../layouts/Layout.astro';
+import { person, products, aiWork, sideProjects, services, mvpOffer, skills, experience, education, stats, SITE_URL } from '../../data/site';
+import bhandar from '../../assets/projects/bhandar.png';
+import easeva from '../../assets/projects/easeva.png';
+import rachna from '../../assets/projects/rachna.png';
+import daybook from '../../assets/projects/daybook.png';
+const shots: Record<string, ImageMetadata> = { bhandar, easeva, rachna, daybook };
+const [pB, pE, pR, pD] = products;
+const siteHost = SITE_URL.replace('https://', '');
+const total = 6;
+---
+<Layout title="Lohit Sekhar Behera – Portfolio (PDF)" description="Printable portfolio" noindex path="/print/">
+  <style is:global>
+    @page { size: A4; margin: 0; }
+    html, body { background: #e2e8f0; }
+    .pg { width: 210mm; height: 297mm; overflow: hidden; position: relative; margin: 0 auto 12px; break-after: page; display: flex; flex-direction: column; }
+    .pg:last-child { break-after: auto; }
+    @media print { html, body { background: #fff; } .pg { margin: 0; } }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  </style>
+
+  {/* PROJECT PAGE COMPONENT inline via map */}
+  <!-- 1. COVER -->
+  <section class="pg text-slate-300" style="background:linear-gradient(155deg,#312e81 0%,#0b1220 45%,#0b1220 70%,#134e4a 100%)">
+    <div class="relative flex flex-1 flex-col px-[18mm] py-[15mm]">
+      <div class="flex items-center justify-between">
+        <span class="grid h-12 w-12 place-items-center rounded-xl bg-accent text-lg font-bold text-white">LB</span>
+        <span class="text-sm tracking-widest text-slate-400 uppercase">Portfolio · {new Date().getFullYear()}</span>
+      </div>
+      <div class="mt-[10mm] flex items-center gap-10">
+        <div class="flex-1">
+          <p class="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-xs font-medium text-emerald-300"><span class="h-2 w-2 rounded-full bg-emerald-400"></span> Open to freelance projects worldwide</p>
+          <h1 class="mt-5 text-5xl leading-tight font-extrabold text-white">{person.name}</h1>
+          <p class="mt-3 text-2xl font-semibold text-indigo-300">{person.title}</p>
+          <p class="mt-2 text-slate-400">{person.tagline}</p>
+        </div>
+      </div>
+      <p class="mt-6 max-w-[150mm] text-xl leading-relaxed text-slate-200">{person.oneLiner}</p>
+      <div class="mt-6 mb-6 grid grid-cols-2 gap-3">
+        {stats.map((st) => (
+          <div class="rounded-xl border border-white/10 bg-white/5 p-4"><p class="text-3xl font-extrabold text-white">{st.value}</p><p class="mt-1 text-sm text-slate-300">{st.label}</p></div>
+        ))}
+        {[
+          ['Products built', 'Bhandar · EASEVA · Rachna · Daybook'],
+          ['Starter offers', 'From $149 / ₹9,999 · MVPs in 2-4 weeks'],
+        ].map(([k, v]) => (
+          <div class="rounded-xl border border-white/10 bg-white/5 p-4"><p class="text-xs font-semibold tracking-wider text-indigo-300 uppercase">{k}</p><p class="mt-1 text-white">{v}</p></div>
+        ))}
+      </div>
+      <div class="mt-auto rounded-2xl bg-white p-6 text-ink">
+        <p class="text-xs font-semibold tracking-wider text-accent uppercase">Contact</p>
+        <div class="mt-3 grid grid-cols-2 gap-x-8 gap-y-2 text-sm">
+          <p><span class="text-slate-500">Email</span><br /><a class="font-semibold" href={`mailto:${person.email}`}>{person.email}</a></p>
+          <p><span class="text-slate-500">GitHub</span><br /><a class="font-semibold" href={person.github}>github.com/Lohit-Behera</a></p>
+          <p class="col-span-2"><span class="text-slate-500">Website</span><br /><a class="font-semibold whitespace-nowrap" href={`${SITE_URL}/`}>{siteHost}</a></p>
+          <p class="col-span-2"><span class="text-slate-500">LinkedIn</span><br /><a class="font-semibold" href={person.linkedin}>linkedin.com/in/lohit-sekhar-behera</a></p>
+          <p class="col-span-2"><span class="text-slate-500">Based in</span><br /><span class="font-semibold">{person.location} · {person.timezone} · clients worldwide, including India</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2-3. BIG PROJECT PAGES -->
+  {[pB, pE].map((p, i) => (
+    <section class="pg bg-white">
+      <div class="flex items-center justify-between bg-ink px-[16mm] py-4 text-xs text-slate-400"><span class="font-semibold text-white">Lohit Sekhar Behera</span><span>Products built at Asemita · {i + 2}/{total}</span></div>
+      <div class="flex flex-1 flex-col px-[16mm] py-[12mm]">
+        <p class="text-xs font-semibold tracking-widest text-accent uppercase">Project {i + 1}</p>
+        <div class="mt-1 flex items-baseline justify-between"><h2 class="text-4xl font-extrabold text-ink">{p.name}</h2><span class="text-sm text-slate-500">{p.platforms}</span></div>
+        <p class="mt-1 text-lg font-semibold text-accent-2">{p.kind}</p>
+        <div class="mt-6 overflow-hidden rounded-xl border border-slate-200 shadow-md">
+          <Image src={shots[p.slug]} alt={`${p.name} website`} width={1400} quality={90} class="w-full" />
+        </div>
+        <p class="mt-6 text-lg leading-relaxed text-slate-700">{p.summary}</p>
+        <h3 class="mt-6 text-sm font-bold tracking-wider text-ink uppercase">What it does</h3>
+        <ul class="mt-3 space-y-2 text-slate-700">{p.points.map((pt) => <li class="flex gap-3"><span class="mt-2 h-2 w-2 shrink-0 rounded-full bg-accent"></span>{pt}</li>)}</ul>
+        <div class="mt-auto rounded-xl bg-slate-50 p-4 text-sm">
+          <p><span class="font-semibold text-ink">Website:</span> <a class="text-accent" href={p.url}>{p.url.replace('https://', '')}</a></p>
+          <p class="mt-1"><span class="font-semibold text-ink">Stores:</span> {p.stores.map((s, j) => <><a class="text-accent" href={s.href}>{s.label}</a>{j < p.stores.length - 1 ? ' · ' : ''}</>)}</p>
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <!-- 4. RACHNA + DAYBOOK -->
+  <section class="pg bg-white">
+    <div class="flex items-center justify-between bg-ink px-[16mm] py-4 text-xs text-slate-400"><span class="font-semibold text-white">Lohit Sekhar Behera</span><span>Products built at Asemita · 4/{total}</span></div>
+    <div class="flex flex-1 flex-col gap-[8mm] px-[16mm] py-[10mm]">
+      {[pR, pD].map((p, i) => (
+        <div class="flex flex-1 flex-col">
+          <p class="text-xs font-semibold tracking-widest text-accent uppercase">Project {i + 3}</p>
+          <div class="mt-1 flex items-baseline justify-between"><h2 class="text-3xl font-extrabold text-ink">{p.name}</h2><span class="text-xs text-slate-500">{p.platforms}</span></div>
+          <p class="font-semibold text-accent-2">{p.kind}</p>
+          <div class="mt-3 grid grid-cols-[1.25fr_1fr] gap-5">
+            <div class="overflow-hidden rounded-xl border border-slate-200 shadow-md"><Image src={shots[p.slug]} alt={`${p.name} website`} width={1000} quality={90} class="w-full" /></div>
+            <div class="text-sm text-slate-700">
+              <p>{p.summary}</p>
+              <ul class="mt-3 space-y-1.5">{p.points.map((pt) => <li class="flex gap-2"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent"></span>{pt}</li>)}</ul>
+            </div>
+          </div>
+          <div class="mt-3 flex items-center justify-between text-xs">
+            <span></span>
+            <span><a class="text-accent" href={p.url}>{p.url.replace('https://', '')}</a> · {p.stores.map((s, j) => <><a class="text-accent" href={s.href}>{s.label}</a>{j < p.stores.length - 1 ? ' · ' : ''}</>)}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- 5. AI WORK -->
+  <section class="pg bg-white">
+    <div class="flex items-center justify-between bg-ink px-[16mm] py-4 text-xs text-slate-400"><span class="font-semibold text-white">Lohit Sekhar Behera</span><span>AI work · 5/{total}</span></div>
+    <div class="flex flex-1 flex-col px-[16mm] py-[9mm]">
+      <p class="text-xs font-semibold tracking-widest text-accent uppercase">AI work</p>
+      <h2 class="mt-1 text-4xl font-extrabold text-ink">LLM systems running in production</h2>
+      <div class="mt-5 space-y-3">
+        {aiWork.map((a, i) => (
+          <div class="flex gap-4 rounded-xl border border-slate-200 p-4">
+            <span class="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-indigo-50 font-bold text-accent">0{i + 1}</span>
+            <div>
+              <h3 class="text-lg font-bold text-ink">{a.title} <span class="ml-1 inline-block rounded bg-indigo-50 px-2 py-0.5 text-xs font-bold whitespace-nowrap text-accent">{a.metric}</span></h3>
+              <p class="mt-1 text-sm leading-relaxed text-slate-600">{a.body}</p>
+              <p class="mt-2 flex flex-wrap gap-1.5">{a.tags.map((t) => <span class="rounded bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700">{t}</span>)}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <h3 class="mt-5 text-sm font-bold tracking-wider text-ink uppercase">Open-source side projects</h3>
+      <div class="mt-3 space-y-3">
+        {sideProjects.map((s, i) => (
+          <div class={`rounded-xl p-4 ${i === 0 ? 'bg-ink text-slate-300' : 'bg-slate-50 text-slate-600'}`}>
+            <div class="flex items-baseline justify-between"><h4 class={`text-xl font-bold ${i === 0 ? 'text-white' : 'text-ink'}`}>{s.name} <span class={`text-sm font-semibold ${i === 0 ? 'text-teal-300' : 'text-accent-2'}`}>· {s.kind}</span></h4><a href={s.href} class={`text-xs ${i === 0 ? 'text-indigo-300' : 'text-accent'}`}>{s.href.replace('https://', '')}</a></div>
+            <p class="mt-2 text-sm leading-relaxed">{s.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. SERVICES + SKILLS + EXPERIENCE -->
+  <section class="pg bg-white">
+    <div class="flex items-center justify-between bg-ink px-[16mm] py-4 text-xs text-slate-400"><span class="font-semibold text-white">Lohit Sekhar Behera</span><span>Services & skills · 6/{total}</span></div>
+    <div class="flex flex-1 flex-col px-[16mm] py-[9mm]">
+      <p class="text-xs font-semibold tracking-widest text-accent uppercase">Services & starter offers</p>
+      <div class="mt-3 grid grid-cols-2 gap-3">
+        {services.map((s) => (
+          <div class="rounded-xl border border-slate-200 p-4">
+            <h3 class="font-bold text-ink">{s.title}</h3>
+            <p class="mt-1 text-xs text-slate-600">{s.offer}</p>
+            <p class="mt-2 text-sm"><span class="font-bold text-accent">{s.price}</span> <span class="text-slate-500">· {s.time}</span></p>
+          </div>
+        ))}
+      </div>
+      <div class="mt-3 rounded-xl bg-gradient-to-r from-accent to-accent-2 p-4 text-white"><p class="font-bold">{mvpOffer.title}</p><p class="mt-1 text-xs text-indigo-50">{mvpOffer.body}</p></div>
+      <p class="mt-6 text-xs font-semibold tracking-widest text-accent uppercase">Skills</p>
+      <div class="mt-2 grid grid-cols-2 gap-x-6 gap-y-2 text-xs">
+        {skills.map((g) => <p><span class="font-bold text-ink">{g.group}:</span> <span class="text-slate-600">{g.items.join(', ')}</span></p>)}
+      </div>
+      <div class="mt-6 grid grid-cols-[1.7fr_1fr] gap-6">
+        <div>
+          <p class="text-xs font-semibold tracking-widest text-accent uppercase">Experience</p>
+          <ul class="mt-2 space-y-2 text-xs">
+            {experience.map((e) => <li><p class="font-bold text-ink">{e.role} · <span class="font-medium text-slate-500">{e.org}</span></p><p class="text-slate-500">{e.period}</p><p class="text-slate-600">{e.points[0]}</p></li>)}
+          </ul>
+        </div>
+        <div>
+          <p class="text-xs font-semibold tracking-widest text-accent uppercase">Education</p>
+          <ul class="mt-2 space-y-2 text-xs">{education.map((ed) => <li><p class="font-bold text-ink">{ed.degree}</p><p class="text-slate-600">{ed.school} · {ed.period}</p></li>)}</ul>
+        </div>
+      </div>
+      <div class="mt-auto rounded-xl bg-ink p-5 text-center text-slate-300">
+        <p class="text-lg font-bold text-white">Have a project in mind?</p>
+        <p class="mt-1 text-sm"><a class="font-semibold whitespace-nowrap text-indigo-300" href={`mailto:${person.email}`}>{person.email}</a> · <a class="whitespace-nowrap" href={`${SITE_URL}/`}>{siteHost}</a> · <a class="whitespace-nowrap" href={person.github}>github.com/Lohit-Behera</a> · <a class="whitespace-nowrap" href={person.linkedin}>LinkedIn</a></p>
+      </div>
+    </div>
+  </section>
+</Layout>
