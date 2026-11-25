@@ -1,12 +1,102 @@
 @import "tailwindcss";
 
 @theme {
+  /* Legacy tokens: still used by the /print/ PDF page. */
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --color-ink: #0b1220;
   --color-accent: #4f46e5;
   --color-accent-2: #0f766e;
+
+  /* Schematic (index page) */
+  --color-sch-bg: #0f1214;
+  --color-sch-bg2: #151a1d;
+  --color-sch-line: #283035;
+  --color-sch-line2: #3a4448;
+  --color-sch-tx: #e8eae5;
+  --color-sch-tx2: #a2aaab;
+  --color-sig: #ff6b2c;
+  --color-sig2: #ff8a55;
+  --color-live: #4cd38a;
+  --font-grot: "Familjen Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-spec: "Martian Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
 }
 
 html { scroll-behavior: smooth; }
 :focus-visible { outline: 3px solid var(--color-accent); outline-offset: 3px; border-radius: 6px; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* ---------- Schematic theme (index page only) ---------- */
+@layer components {
+  .sch { background: var(--color-sch-bg); color: var(--color-sch-tx); font-family: var(--font-grot); -webkit-font-smoothing: antialiased; scrollbar-color: var(--color-sch-line2) var(--color-sch-bg); caret-color: var(--color-sig); }
+  .sch ::selection { background: var(--color-sig); color: #120a05; }
+  .sch :focus-visible { outline: 2px solid var(--color-sig); outline-offset: 3px; border-radius: 2px; }
+  .sch h1, .sch h2, .sch h3, .sch h4 { text-wrap: balance; }
+  .sch p, .sch li { text-wrap: pretty; }
+  .sch [id] { scroll-margin-top: 4.5rem; }
+  .spec { font-family: var(--font-spec); font-variant-numeric: tabular-nums; }
+  .lbl { font-family: var(--font-spec); font-size: 11px; line-height: 1.5; letter-spacing: .04em; text-transform: uppercase; color: var(--color-sch-tx2); }
+  .h-sec { font-size: clamp(2rem, 3.8vw, 3.1rem); line-height: 1.02; font-weight: 600; letter-spacing: -0.03em; }
+
+  .btn { display: inline-flex; align-items: center; gap: .6rem; padding: .85rem 1.2rem; font-weight: 600; border-radius: 4px; line-height: 1; transition: background-color .18s var(--ease-out-expo), color .18s, box-shadow .18s, transform .12s; }
+  .btn:active { transform: translateY(1px); }
+  .btn-sig { background: var(--color-sig); color: #140a05; }
+  .btn-sig:hover { background: var(--color-sig2); }
+  .btn-ghost { box-shadow: inset 0 0 0 1px var(--color-sch-line2); color: var(--color-sch-tx); }
+  .btn-ghost:hover { box-shadow: inset 0 0 0 1px var(--color-sch-tx); }
+  .btn .arr { transition: transform .25s var(--ease-out-expo); }
+  .btn:hover .arr { transform: translateX(4px); }
+  .lnk { color: var(--color-sig2); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+  .lnk:hover { text-decoration-thickness: 2px; }
+
+  /* Pipeline diagram */
+  .wire { fill: none; stroke: #4a555b; stroke-width: 1.25; }
+  .node rect { fill: var(--color-sch-bg2); stroke: var(--color-sch-line2); stroke-width: 1; }
+  .node text { fill: var(--color-sch-tx); font-family: var(--font-spec); font-size: 12px; }
+  .node.core rect { stroke: var(--color-sig); }
+  .tag circle { fill: var(--color-sch-bg); stroke: var(--color-sig); stroke-width: 1; }
+  .tag text { fill: var(--color-sig2); font-family: var(--font-spec); font-size: 10px; font-weight: 500; }
+  .dlbl { fill: var(--color-sch-tx2); font-family: var(--font-spec); font-size: 10.5px; letter-spacing: .5px; }
+  .pkt { fill: var(--color-sig); opacity: 0; }
+  .motion .wire { stroke-dasharray: var(--len); stroke-dashoffset: var(--len); animation: sch-draw 1.1s var(--ease-out-expo) forwards; animation-delay: var(--d); }
+  @keyframes sch-draw { to { stroke-dashoffset: 0; } }
+  .motion .node, .motion .tag { opacity: 0; animation: sch-on .5s var(--ease-out-expo) forwards; animation-delay: var(--d); }
+  @keyframes sch-on { to { opacity: 1; } }
+  .motion .rise { opacity: 0; transform: translateY(14px); animation: sch-rise .9s var(--ease-out-expo) forwards; animation-delay: var(--d, 0s); }
+  @keyframes sch-rise { to { opacity: 1; transform: none; } }
+  .legend-row { transition: background-color .2s var(--ease-out-expo); }
+  .legend-row:hover { background: var(--color-sch-bg2); }
+
+  /* Measured screenshots: dimension line extends, image scans in */
+  .dim { height: 1px; background: var(--color-sch-tx2); transform-origin: center; }
+  .motion [data-io] .dim { transform: scaleX(0); transition: transform 1s var(--ease-out-expo); }
+  .motion [data-io].in .dim { transform: none; }
+  .motion [data-io] .scan { clip-path: inset(0 0 100% 0); transition: clip-path 1.2s var(--ease-out-expo) .2s; }
+  .motion [data-io].in .scan { clip-path: inset(0); }
+  .shot img { transition: transform .6s var(--ease-out-expo); }
+  .shot:hover img { transform: scale(1.012); }
+
+  /* Signal trace under AI rows / timeline */
+  .trace { height: 1px; background: var(--color-sig); transform-origin: left; opacity: 0; }
+  .motion [data-io].in .trace { animation: sch-trace 2.6s var(--ease-out-expo) .1s both; }
+  @keyframes sch-trace { 0% { opacity: 1; transform: scaleX(0); } 45% { opacity: 1; transform: scaleX(1); } 100% { opacity: 0; transform: scaleX(1); } }
+
+  .svc { transition: background-color .2s var(--ease-out-expo); }
+  .svc:hover { background: var(--color-sch-bg2); }
+  .svc .px { transition: color .2s; }
+  .svc:hover .px { color: var(--color-sig2); }
+
+  .navlink { position: relative; color: var(--color-sch-tx2); transition: color .2s; }
+  .navlink:hover, .navlink[aria-current="true"] { color: var(--color-sch-tx); }
+  .navlink::after { content: ""; position: absolute; left: 0; right: 0; bottom: -19px; height: 1px; background: var(--color-sig); transform: scaleX(0); transform-origin: left; transition: transform .35s var(--ease-out-expo); }
+  .navlink[aria-current="true"]::after { transform: scaleX(1); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .motion .wire, .motion .node, .motion .tag, .motion .rise { animation: none; opacity: 1; stroke-dashoffset: 0; transform: none; }
+    .pkt { display: none; }
+    .motion [data-io] .dim, .motion [data-io] .scan { transition: none; transform: none; clip-path: none; }
+    .motion [data-io].in .trace { animation: none; }
+    .btn .arr, .shot img { transition: none; }
+  }
+}

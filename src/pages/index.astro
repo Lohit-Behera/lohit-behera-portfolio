@@ -1,5 +1,8 @@
 ---
 import { Image } from 'astro:assets';
+import '@fontsource-variable/familjen-grotesk';
+import '@fontsource/martian-mono/400.css';
+import '@fontsource/martian-mono/500.css';
 import Layout from '../layouts/Layout.astro';
 import { person, products, aiWork, sideProjects, services, mvpOffer, skills, experience, education, stats } from '../data/site';
 import bhandar from '../assets/projects/bhandar.png';
@@ -7,211 +10,227 @@ import easeva from '../assets/projects/easeva.png';
 import rachna from '../assets/projects/rachna.png';
 import daybook from '../assets/projects/daybook.png';
 const shots: Record<string, ImageMetadata> = { bhandar, easeva, rachna, daybook };
-const nav = [
-  ['Work', '#work'], ['AI', '#ai'], ['Services', '#services'], ['Skills', '#skills'], ['Experience', '#experience'], ['Contact', '#contact'],
-];
+const nav = [['Work', '#work'], ['AI', '#ai'], ['Services', '#services'], ['Skills', '#skills'], ['Experience', '#experience'], ['Contact', '#contact']];
 const mailto = `mailto:${person.email}?subject=${encodeURIComponent('Project enquiry')}`;
+const nb = (s: string) => s.replace(/(\d)-(\d)/g, '$1‑$2'); // keep "2-4" on one line
+const arrow = `<svg class="arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg>`;
+const ext = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>`;
+
+// Pipeline diagram (labels are the site's own service/skill terms).
+const inputs = ['PDFs', 'XLSX', 'Scans'];
+const core = ['RAG', 'LLM', 'MCP'];
+const outs = ['Web', 'iOS', 'Android', 'Desktop'];
+// The four work numbers become measured callouts on the diagram: [requests, services, pages, statement types]
+const [sReq, sSvc, sPages, sTypes] = stats;
+const legend = [
+  { n: 1, s: sTypes, where: 'Input' },
+  { n: 2, s: sPages, where: 'LLM' },
+  { n: 3, s: sSvc, where: 'Backend' },
+  { n: 4, s: sReq, where: 'Output' },
+];
+const tagsD = [{ n: 1, x: 114, y: 80, d: .55 }, { n: 2, x: 334, y: 180, d: .95 }, { n: 3, x: 360, y: 204, d: 1.2 }, { n: 4, x: 548, y: 40, d: 1.55 }];
+const tagsM = [{ n: 1, x: 108, y: 20, d: .55 }, { n: 2, x: 220, y: 150, d: .95 }, { n: 3, x: 170, y: 237, d: 1.2 }, { n: 4, x: 332, y: 300, d: 1.55 }];
+const mX = [8, 120, 232]; const oX = [6, 90, 174, 258];
 ---
 <Layout
   title="Lohit Sekhar Behera – Freelance Full Stack & AI Engineer (RAG, LLM, Web, Mobile)"
   description="Freelance Full Stack & AI Engineer in Bhubaneswar, India. RAG chatbots, LLM pipelines, MCP workflows, full-stack web apps, native iOS & Android apps and Tauri desktop apps for clients worldwide."
+  bodyClass="sch"
+  preloadFonts
+  themeColor="#0f1214"
 >
-  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:bg-white focus:px-4 focus:py-2 focus:rounded-lg">Skip to content</a>
+  <script is:inline>if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('motion');</script>
+  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:bg-sig focus:px-4 focus:py-2 focus:text-black">Skip to content</a>
 
-  <header class="sticky top-0 z-40 border-b border-white/10 bg-ink/85 backdrop-blur text-slate-200">
-    <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3">
-      <a href="#top" class="flex items-center gap-2 font-semibold text-white">
-        <span class="grid h-8 w-8 place-items-center rounded-lg bg-accent text-sm font-bold">LB</span>
-        <span class="hidden sm:inline">Lohit Behera</span>
-      </a>
-      <nav aria-label="Primary" class="hidden md:block">
-        <ul class="flex gap-6 text-sm">
-          {nav.map(([l, h]) => <li><a href={h} class="hover:text-white">{l}</a></li>)}
-        </ul>
-      </nav>
-      <a href="#contact" class="rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-ink hover:bg-indigo-100">Hire me</a>
+  <header class="sticky top-0 z-40 border-b border-sch-line bg-sch-bg/90 backdrop-blur-sm">
+    <div class="mx-auto flex max-w-[1280px] items-center justify-between gap-4 px-5 py-3.5 sm:px-10">
+      <a href="#top" class="flex items-center gap-3 font-semibold"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><rect x="1" y="1" width="20" height="20" fill="none" stroke="#ff6b2c" stroke-width="1.5"/><path d="M6 6v10h10" fill="none" stroke="#e8eae5" stroke-width="1.5"/></svg>Lohit Behera</a>
+      <nav aria-label="Primary" class="hidden md:block"><ul class="flex gap-7 text-[14px]">{nav.map(([l, h]) => <li><a href={h} class="navlink" data-nav>{l}</a></li>)}</ul></nav>
+      <a href="#contact" class="btn btn-sig !px-4 !py-2.5 text-[14px]">Hire me</a>
     </div>
   </header>
 
   <main id="main">
     <!-- HERO -->
-    <section id="top" class="relative overflow-hidden bg-ink text-slate-300">
-      <div aria-hidden="true" class="pointer-events-none absolute inset-0 bg-[radial-gradient(60rem_30rem_at_80%_-10%,rgba(79,70,229,.45),transparent),radial-gradient(40rem_25rem_at_0%_110%,rgba(13,148,136,.35),transparent)]"></div>
-      <div class="relative mx-auto grid max-w-6xl items-center gap-12 px-5 py-20 md:grid-cols-[1.25fr_1fr] md:py-28">
-        <div>
-          <p class="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-xs font-medium text-emerald-300">
-            <span class="h-2 w-2 rounded-full bg-emerald-400"></span> Open to freelance projects worldwide
-          </p>
-          <h1 class="mt-5 text-4xl font-extrabold tracking-tight text-white sm:text-6xl">{person.name}</h1>
-          <p class="mt-3 text-xl font-semibold text-indigo-300 sm:text-2xl">{person.title}</p>
-          <p class="mt-2 text-base text-slate-400">{person.tagline}</p>
-          <p class="mt-6 max-w-xl text-lg leading-relaxed text-slate-300">{person.oneLiner}</p>
-          <div class="mt-8 flex flex-wrap gap-3">
-            <a href="#contact" class="rounded-full bg-accent px-6 py-3 font-semibold text-white shadow-lg shadow-indigo-900/40 hover:bg-indigo-500">Hire me</a>
-            <a href={mailto} class="rounded-full border border-white/20 px-6 py-3 font-semibold text-white hover:bg-white/10">{person.email}</a>
-          </div>
-          <p class="mt-6 text-sm text-slate-400">{person.location} · {person.timezone} · Clients worldwide, including India</p>
+    <section id="top" class="border-b border-sch-line" aria-labelledby="hero-h">
+      <div class="mx-auto grid max-w-[1280px] gap-12 px-5 pt-14 pb-12 sm:px-10 lg:grid-cols-12 lg:gap-10 lg:pt-20">
+        <div class="lg:col-span-6 lg:pt-4">
+          <p class="rise lbl flex items-center gap-2" style="--d:.05s"><span class="inline-block h-1.5 w-1.5 rounded-full bg-live"></span>Open to freelance projects worldwide</p>
+          <h1 id="hero-h" class="rise mt-6 text-[clamp(2.9rem,6.2vw,5.4rem)] leading-[.95] font-semibold tracking-[-0.035em]" style="--d:.12s">{person.name}</h1>
+          <p class="rise mt-5 text-[1.35rem] font-medium text-sig2" style="--d:.2s">{person.title}</p>
+          <p class="rise mt-6 max-w-[46ch] text-[1.15rem] leading-[1.55]" style="--d:.28s">{person.oneLiner}</p>
+          <p class="rise mt-4 max-w-[52ch] text-[15px] leading-relaxed text-sch-tx2" style="--d:.32s">{person.tagline}</p>
+          <div class="rise mt-8 flex flex-wrap gap-3" style="--d:.38s"><a href="#contact" class="btn btn-sig">Hire me <Fragment set:html={arrow} /></a><a href={mailto} class="btn btn-ghost spec text-[12.5px]">{person.email}</a></div>
+          <p class="rise lbl mt-6" style="--d:.44s">{person.location} · {person.timezone} · Clients worldwide, including India</p>
         </div>
-        <div class="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm sm:p-8">
-          <p class="text-xs font-semibold uppercase tracking-widest text-indigo-300">By the numbers</p>
-          <dl class="mt-5 grid grid-cols-2 gap-x-6 gap-y-7">
-            {stats.map((st) => (
-              <div>
-                <dt class="sr-only">{st.label}</dt>
-                <dd class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">{st.value}</dd>
-                <dd class="mt-1 text-sm leading-snug text-slate-300">{st.label}</dd>
-              </div>
+
+        <figure class="lg:col-span-6" aria-labelledby="dia-cap">
+          <!-- desktop / tablet: left-to-right -->
+          <svg viewBox="0 0 560 410" class="hidden w-full sm:block" aria-hidden="true" data-dia>
+            <text x="10" y="66" class="dlbl">INPUT</text>
+            <text x="214" y="96" class="dlbl">AI SYSTEMS</text>
+            <text x="436" y="26" class="dlbl">SHIPPED AS</text>
+            {inputs.map((t, i) => <g class="node" style={`--d:${0.2 + i * 0.08}s`} transform={`translate(10 ${80 + i * 110})`}><rect width="104" height="40" rx="2"/><text x="14" y="25">{t}</text></g>)}
+            {inputs.map((_, i) => <path class="wire" style={`--len:220;--d:${0.45 + i * 0.08}s`} d={`M114 ${100 + i * 110} C 170 ${100 + i * 110}, 170 204, 214 204`} />)}
+            {core.map((t, i) => <g class="node core" style={`--d:${0.7 + i * 0.1}s`} transform={`translate(214 ${110 + i * 70})`}><rect width="120" height="48" rx="2"/><text x="16" y="29">{t}</text></g>)}
+            <path class="wire" style="--len:200;--d:1s" d="M334 134 H 360 V 274 H 334 M334 204 H 360" />
+            {outs.map((_, i) => <path class="wire" style={`--len:240;--d:${1.15 + i * 0.07}s`} d={`M360 204 C 400 204, 400 ${60 + i * 100}, 436 ${60 + i * 100}`} />)}
+            {outs.map((t, i) => <g class="node" style={`--d:${1.35 + i * 0.07}s`} transform={`translate(436 ${40 + i * 100})`}><rect width="114" height="40" rx="2"/><text x="14" y="25">{t}</text></g>)}
+            {tagsD.map((t) => <g class="tag" style={`--d:${t.d + 0.5}s`}><circle cx={t.x} cy={t.y} r="9"/><text x={t.x} y={t.y + 3.5} text-anchor="middle">{t.n}</text></g>)}
+            <circle class="pkt" r="4" data-pkt></circle>
+            <path data-path d="M114 100 C 170 100, 170 204, 214 204 H 360 C 400 204, 400 60, 436 60" fill="none" stroke="none"/>
+          </svg>
+          <!-- phone: top-to-bottom -->
+          <svg viewBox="0 0 340 380" class="w-full sm:hidden" aria-hidden="true" data-dia>
+            <text x="8" y="142" class="dlbl">AI SYSTEMS</text>
+            <text x="6" y="368" class="dlbl">SHIPPED AS</text>
+            {inputs.map((t, i) => <g class="node" style={`--d:${0.2 + i * 0.08}s`} transform={`translate(${mX[i]} 20)`}><rect width="100" height="40" rx="2"/><text x="14" y="25">{t}</text></g>)}
+            {inputs.map((_, i) => <path class="wire" style={`--len:200;--d:${0.45 + i * 0.08}s`} d={`M${mX[i] + 50} 60 C ${mX[i] + 50} 105, 170 105, 170 150`} />)}
+            {core.map((t, i) => <g class="node core" style={`--d:${0.7 + i * 0.1}s`} transform={`translate(${mX[i]} 150)`}><rect width="100" height="44" rx="2"/><text x="14" y="27">{t}</text></g>)}
+            <path class="wire" style="--len:300;--d:1s" d="M58 194 V 214 H 282 V 194 M170 194 V 260" />
+            {outs.map((_, i) => <path class="wire" style={`--len:200;--d:${1.15 + i * 0.07}s`} d={`M170 260 C 170 280, ${oX[i] + 38} 280, ${oX[i] + 38} 300`} />)}
+            {outs.map((t, i) => <g class="node" style={`--d:${1.35 + i * 0.07}s`} transform={`translate(${oX[i]} 300)`}><rect width="76" height="40" rx="2"/><text x="38" y="25" text-anchor="middle">{t}</text></g>)}
+            {tagsM.map((t) => <g class="tag" style={`--d:${t.d + 0.5}s`}><circle cx={t.x} cy={t.y} r="9"/><text x={t.x} y={t.y + 3.5} text-anchor="middle">{t.n}</text></g>)}
+            <circle class="pkt" r="4" data-pkt></circle>
+            <path data-path d="M58 60 C 58 105, 170 105, 170 150 L 170 260 C 170 280, 44 280, 44 300" fill="none" stroke="none"/>
+          </svg>
+          <figcaption id="dia-cap" class="sr-only">Diagram: documents (PDFs, XLSX, scans) flow through RAG, LLM and MCP tooling and ship as web, iOS, Android and desktop apps.</figcaption>
+
+          <!-- By the numbers: the diagram's callouts -->
+          <h2 class="lbl mt-6 border-b border-sch-line pb-2">By the numbers</h2>
+          <ul>
+            {legend.map((l) => (
+              <li class="legend-row grid grid-cols-[22px_6.2rem_1fr] items-baseline gap-3 border-b border-sch-line px-1 py-3 sm:grid-cols-[22px_7.5rem_1fr_auto]">
+                <span aria-hidden="true" class="spec grid h-[18px] w-[18px] place-items-center self-center rounded-full border border-sig text-[9.5px] text-sig2">{l.n}</span>
+                <strong class="spec text-[1.15rem] font-medium text-white">{l.s.value}</strong>
+                <span class="text-[13.5px] leading-snug text-sch-tx2">{l.s.label}</span>
+                <span class="lbl hidden sm:block" aria-hidden="true">{l.where}</span>
+              </li>
             ))}
-          </dl>
-          <p class="mt-6 border-t border-white/10 pt-4 text-sm text-slate-300">Also: RAG · MCP · Tauri desktop apps · native iOS &amp; Android</p>
-        </div>
+          </ul>
+          <p class="lbl mt-3">Also: RAG · MCP · Tauri desktop apps · native iOS &amp; Android</p>
+        </figure>
       </div>
     </section>
 
     <!-- PROJECTS -->
-    <section id="work" aria-labelledby="work-h" class="mx-auto max-w-6xl px-5 py-20">
-      <p class="text-sm font-semibold uppercase tracking-widest text-accent">Selected work</p>
-      <h2 id="work-h" class="mt-2 text-3xl font-bold tracking-tight text-ink sm:text-4xl">Products I built at Asemita</h2>
-      <p class="mt-3 max-w-2xl text-slate-600">Four products I built at <a class="font-medium text-accent underline-offset-4 hover:underline" href="https://asemita.com">Asemita Technologies</a>, a Bhubaneswar software company: everyday apps for shops, households and small teams, on the web and as native iOS and Android apps.</p>
-      <div class="mt-10 grid gap-8 md:grid-cols-2">
-        {products.map((p) => (
-          <article class="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-lg">
-            <a href={p.url} class="block overflow-hidden border-b border-slate-200 bg-slate-100" aria-label={`Visit ${p.name}`}>
-              <Image src={shots[p.slug]} alt={`${p.name} website home page`} widths={[480, 720, 960]} sizes="(min-width: 768px) 560px, 100vw" class="aspect-[16/10] w-full object-cover object-top transition duration-500 group-hover:scale-[1.02]" />
-            </a>
-            <div class="flex flex-1 flex-col p-6">
-              <div class="flex flex-wrap items-baseline justify-between gap-2">
-                <h3 class="text-2xl font-bold text-ink">{p.name}</h3>
-                <span class="text-xs font-medium text-slate-500">{p.platforms}</span>
-              </div>
-              <p class="mt-1 text-sm font-semibold text-accent-2">{p.kind}</p>
-              <p class="mt-3 text-slate-600">{p.summary}</p>
-              <ul class="mt-4 space-y-1.5 text-sm text-slate-600">
-                {p.points.map((pt) => <li class="flex gap-2"><span aria-hidden="true" class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent"></span>{pt}</li>)}
-              </ul>
-              <div class="mt-auto flex flex-wrap gap-2 pt-5 text-sm">
-                <a href={p.url} class="rounded-full bg-ink px-4 py-1.5 font-medium text-white hover:bg-slate-700">Visit site<span class="sr-only"> of {p.name}</span></a>
-                {p.stores.map((s) => <a href={s.href} class="rounded-full border border-slate-300 px-4 py-1.5 font-medium text-slate-700 hover:border-accent hover:text-accent">{s.label}<span class="sr-only"> – {p.name}</span></a>)}
-              </div>
-            </div>
-          </article>
-        ))}
+    <section id="work" aria-labelledby="work-h" class="mx-auto max-w-[1280px] px-5 pt-20 sm:px-10 lg:pt-28">
+      <div class="grid gap-6 border-b border-sch-line pb-10 lg:grid-cols-12 lg:items-end">
+        <h2 id="work-h" class="h-sec lg:col-span-5">Products I built at Asemita</h2>
+        <p class="max-w-[62ch] text-[16px] leading-relaxed text-sch-tx2 lg:col-span-7">Four products I built at <a class="lnk" href="https://asemita.com">Asemita Technologies</a>, a Bhubaneswar software company: everyday apps for shops, households and small teams, on the web and as native iOS and Android apps.</p>
       </div>
+      {products.map((p, i) => (
+        <article id={`p-${p.slug}`} class="grid gap-10 border-b border-sch-line py-14 lg:grid-cols-12 lg:py-20" data-io>
+          <div class={`lg:col-span-8 ${i % 2 ? 'lg:order-2' : ''}`}>
+            <div class="mb-3 flex items-center gap-3" aria-hidden="true"><span class="lbl">|</span><span class="dim flex-1"></span><span class="lbl normal-case">{p.url.replace('https://', '')}</span><span class="dim flex-1"></span><span class="lbl">|</span></div>
+            <a href={p.url} class="scan shot block overflow-hidden border border-sch-line"><Image src={shots[p.slug]} alt={`${p.name} website home page`} widths={[480, 720, 960, 1280]} sizes="(min-width: 1280px) 800px, (min-width: 1024px) 62vw, 100vw" class="aspect-[16/10] w-full object-cover object-top" loading={i === 0 ? 'eager' : 'lazy'} /></a>
+          </div>
+          <div class={`flex flex-col lg:col-span-4 ${i % 2 ? 'lg:order-1' : ''}`}>
+            <p class="lbl">{p.platforms}</p>
+            <h3 class="mt-3 text-[clamp(2.4rem,4vw,3.2rem)] leading-none font-semibold tracking-[-0.03em]">{p.name}</h3>
+            <p class="mt-2 text-[1.1rem] text-sig2">{p.kind}</p>
+            <p class="mt-5 text-[15.5px] leading-relaxed">{p.summary}</p>
+            <ul class="mt-6 divide-y divide-sch-line border-y border-sch-line text-[14px] leading-snug text-sch-tx2">{p.points.map((pt) => <li class="py-3">{pt}</li>)}</ul>
+            <div class="mt-auto flex flex-wrap gap-2.5 pt-7">
+              <a href={p.url} class="btn btn-sig !py-2.5 text-[14px]">Visit site<span class="sr-only"> of {p.name}</span> <Fragment set:html={arrow} /></a>
+              {p.stores.map((s) => <a href={s.href} class="btn btn-ghost !py-2.5 text-[14px]">{s.label}<span class="sr-only"> – {p.name}</span> <Fragment set:html={ext} /></a>)}
+            </div>
+          </div>
+        </article>
+      ))}
     </section>
 
     <!-- AI WORK -->
-    <section id="ai" aria-labelledby="ai-h" class="bg-slate-50 py-20">
-      <div class="mx-auto max-w-6xl px-5">
-        <p class="text-sm font-semibold uppercase tracking-widest text-accent">AI work</p>
-        <h2 id="ai-h" class="mt-2 text-3xl font-bold tracking-tight text-ink sm:text-4xl">LLM systems running in production</h2>
-        <p class="mt-3 max-w-2xl text-slate-600">Retrieval, tool use and document understanding: the AI systems I have built for real products and users.</p>
-        <div class="mt-10 grid gap-6 md:grid-cols-3">
-          {aiWork.map((a) => (
-            <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-              <p class="text-2xl font-extrabold text-accent">{a.metric}</p>
-              <h3 class="mt-2 text-lg font-bold text-ink">{a.title}</h3>
-              <p class="mt-3 text-sm leading-relaxed text-slate-600">{a.body}</p>
-              <ul class="mt-4 flex flex-wrap gap-1.5" aria-label="Technologies">
-                {a.tags.map((t) => <li class="rounded-md bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700">{t}</li>)}
-              </ul>
-            </article>
-          ))}
-        </div>
-        <h3 class="mt-14 text-xl font-bold text-ink">Open-source side projects</h3>
-        <div class="mt-5 grid gap-6 md:grid-cols-[1.6fr_1fr]">
-          {sideProjects.map((s, i) => (
-            <article class={`rounded-2xl p-6 ${i === 0 ? 'bg-ink text-slate-300' : 'border border-slate-200 bg-white text-slate-600'}`}>
-              <div class="flex flex-wrap items-baseline justify-between gap-2">
-                <h4 class={`text-2xl font-bold ${i === 0 ? 'text-white' : 'text-ink'}`}>{s.name}</h4>
-                <a href={s.href} class={`text-sm font-medium underline-offset-4 hover:underline ${i === 0 ? 'text-indigo-300' : 'text-accent'}`}>View on GitHub<span class="sr-only"> – {s.name}</span></a>
-              </div>
-              <p class={`mt-1 text-sm font-semibold ${i === 0 ? 'text-teal-300' : 'text-accent-2'}`}>{s.kind}</p>
-              <p class="mt-3 text-sm leading-relaxed">{s.body}</p>
-              <ul class="mt-4 flex flex-wrap gap-1.5" aria-label="Technologies">
-                {s.tags.map((t) => <li class={`rounded-md px-2 py-0.5 text-xs font-medium ${i === 0 ? 'bg-white/10 text-indigo-100' : 'bg-indigo-50 text-indigo-700'}`}>{t}</li>)}
-              </ul>
-            </article>
-          ))}
-        </div>
+    <section id="ai" aria-labelledby="ai-h" class="mx-auto max-w-[1280px] px-5 pt-20 sm:px-10 lg:pt-28">
+      <div class="grid gap-6 border-b border-sch-line pb-10 lg:grid-cols-12 lg:items-end">
+        <h2 id="ai-h" class="h-sec lg:col-span-5">LLM systems running in production</h2>
+        <p class="max-w-[62ch] text-[16px] leading-relaxed text-sch-tx2 lg:col-span-7">Retrieval, tool use and document understanding: the AI systems I have built for real products and users.</p>
+      </div>
+      <ol>
+        {aiWork.map((a) => (
+          <li class="relative grid gap-4 border-b border-sch-line py-9 lg:grid-cols-12 lg:gap-10" data-io>
+            <span class="trace absolute -bottom-px left-0 w-full" aria-hidden="true"></span>
+            <p class="spec text-[1.15rem] leading-snug font-medium text-sig2 lg:col-span-3">{a.metric}</p>
+            <div class="lg:col-span-6">
+              <h3 class="text-[1.4rem] leading-tight font-semibold tracking-[-0.015em]">{a.title}</h3>
+              <p class="mt-3 max-w-[65ch] text-[15.5px] leading-relaxed text-sch-tx2">{a.body}</p>
+            </div>
+            <ul class="lbl flex flex-wrap content-start gap-x-3 gap-y-1 lg:col-span-3 lg:flex-col" aria-label="Technologies">{a.tags.map((t) => <li>{t}</li>)}</ul>
+          </li>
+        ))}
+      </ol>
+      <h3 class="lbl mt-16">Open-source side projects</h3>
+      <div class="mt-4 grid border border-sch-line lg:grid-cols-[1.5fr_1fr]">
+        {sideProjects.map((s, i) => (
+          <article class={`flex flex-col p-6 sm:p-8 ${i ? 'border-t border-sch-line lg:border-t-0 lg:border-l' : ''}`}>
+            <div class="flex flex-wrap items-baseline justify-between gap-3">
+              <h4 class="text-[2rem] leading-none font-semibold tracking-[-0.025em]">{s.name}</h4>
+              <a href={s.href} class="lnk inline-flex items-center gap-1.5 text-[14px] font-medium">View on GitHub<span class="sr-only"> – {s.name}</span> <Fragment set:html={ext} /></a>
+            </div>
+            <p class="mt-2 text-sig2">{s.kind}</p>
+            <p class="mt-4 max-w-[68ch] text-[15px] leading-relaxed text-sch-tx2">{s.body}</p>
+            <ul class="lbl mt-auto flex flex-wrap gap-x-4 gap-y-1 pt-6" aria-label="Technologies">{s.tags.map((t) => <li>{t}</li>)}</ul>
+          </article>
+        ))}
       </div>
     </section>
 
     <!-- SERVICES -->
-    <section id="services" aria-labelledby="services-h" class="mx-auto max-w-6xl px-5 py-20">
-      <p class="text-sm font-semibold uppercase tracking-widest text-accent">Services</p>
-      <h2 id="services-h" class="mt-2 text-3xl font-bold tracking-tight text-ink sm:text-4xl">What I can build for you</h2>
-      <p class="mt-3 max-w-2xl text-slate-600">Start small with a fixed-price starter offer, or scope a full product together.</p>
-      <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <section id="services" aria-labelledby="services-h" class="mx-auto max-w-[1280px] px-5 pt-20 sm:px-10 lg:pt-28">
+      <div class="grid gap-6 lg:grid-cols-12 lg:items-end">
+        <h2 id="services-h" class="h-sec lg:col-span-5">What I can build for you</h2>
+        <p class="text-[16px] text-sch-tx2 lg:col-span-7">Start small with a fixed-price starter offer, or scope a full product together.</p>
+      </div>
+      <div class="mt-12 border-t border-sch-line">
+        <div class="lbl hidden grid-cols-12 gap-6 border-b border-sch-line px-2 py-3 lg:grid" aria-hidden="true"><span class="col-span-4">Service</span><span class="col-span-5">Starter offer</span><span class="col-span-3 text-right">Price · time</span></div>
         {services.map((s) => (
-          <article class="flex flex-col rounded-2xl border border-slate-200 p-6">
-            <h3 class="text-lg font-bold text-ink">{s.title}</h3>
-            <p class="mt-2 text-sm text-slate-600">{s.body}</p>
-            <div class="mt-auto pt-5">
-              <div class="rounded-xl bg-indigo-50 p-4">
-                <p class="text-xs font-semibold uppercase tracking-wider text-indigo-700">Starter offer</p>
-                <p class="mt-1 text-sm font-medium text-ink">{s.offer}</p>
-                <p class="mt-2 text-lg font-bold text-accent">{s.price}</p>
-                <p class="text-xs text-slate-600">{s.time}</p>
-              </div>
-            </div>
-          </article>
+          <div class="svc grid gap-3 border-b border-sch-line px-2 py-7 lg:grid-cols-12 lg:gap-6">
+            <div class="lg:col-span-4"><h3 class="text-[1.3rem] font-semibold tracking-[-0.01em]">{s.title}</h3><p class="mt-2 text-[14px] leading-relaxed text-sch-tx2">{s.body}</p></div>
+            <p class="text-[15px] leading-snug lg:col-span-5"><span class="lbl mb-1 block lg:hidden">Starter offer</span>{s.offer}</p>
+            <div class="lg:col-span-3 lg:text-right"><p class="px spec text-[1.1rem] font-medium">{s.price}</p><p class="lbl mt-1">{s.time}</p></div>
+          </div>
         ))}
       </div>
-      <div class="mt-8 flex flex-col items-start justify-between gap-4 rounded-2xl bg-gradient-to-r from-accent to-accent-2 p-8 text-white md:flex-row md:items-center">
-        <div>
-          <h3 class="text-2xl font-bold">{mvpOffer.title}</h3>
-          <p class="mt-2 max-w-2xl text-indigo-50">{mvpOffer.body}</p>
-        </div>
-        <a href={mailto} class="shrink-0 rounded-full bg-white px-6 py-3 font-semibold text-ink hover:bg-indigo-50">Get a quote</a>
+      <div class="mt-12 grid gap-6 border border-sig p-8 sm:p-10 lg:grid-cols-12 lg:items-end">
+        <h3 class="text-[clamp(1.7rem,3vw,2.4rem)] leading-tight font-semibold tracking-[-0.02em] lg:col-span-7">{nb(mvpOffer.title)}</h3>
+        <div class="lg:col-span-5"><p class="text-[15px] leading-relaxed text-sch-tx2">{mvpOffer.body}</p><a href={mailto} class="btn btn-sig mt-6">Get a quote <Fragment set:html={arrow} /></a></div>
       </div>
     </section>
 
     <!-- SKILLS -->
-    <section id="skills" aria-labelledby="skills-h" class="bg-slate-50 py-20">
-      <div class="mx-auto max-w-6xl px-5">
-        <p class="text-sm font-semibold uppercase tracking-widest text-accent">Skills</p>
-        <h2 id="skills-h" class="mt-2 text-3xl font-bold tracking-tight text-ink sm:text-4xl">Tools I work with</h2>
-        <div class="mt-10 grid gap-6 md:grid-cols-2">
-          {skills.map((g) => (
-            <div class="rounded-2xl border border-slate-200 bg-white p-6">
-              <h3 class="font-bold text-ink">{g.group}</h3>
-              <ul class="mt-4 flex flex-wrap gap-2">
-                {g.items.map((i) => <li class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-sm text-slate-700">{i}</li>)}
-              </ul>
-            </div>
-          ))}
-        </div>
+    <section id="skills" aria-labelledby="skills-h" class="mx-auto max-w-[1280px] px-5 pt-20 sm:px-10 lg:pt-28">
+      <h2 id="skills-h" class="h-sec border-b border-sch-line pb-10">Tools I work with</h2>
+      <div class="grid grid-cols-2 lg:grid-cols-4">
+        {skills.map((g, i) => (
+          <div class={`border-b border-sch-line py-7 pr-4 sm:pr-6 ${i % 2 ? 'border-l pl-4 sm:pl-6' : ''} ${i ? 'lg:border-l lg:pl-6' : ''}`}>
+            <h3 class="lbl text-sch-tx">{g.group}</h3>
+            <ul class="mt-4 space-y-1.5 text-[14px] text-sch-tx2 sm:text-[15px]">{g.items.map((it) => <li>{it}</li>)}</ul>
+          </div>
+        ))}
       </div>
     </section>
 
     <!-- EXPERIENCE -->
-    <section id="experience" aria-labelledby="exp-h" class="mx-auto max-w-6xl px-5 py-20">
-      <p class="text-sm font-semibold uppercase tracking-widest text-accent">Experience</p>
-      <h2 id="exp-h" class="mt-2 text-3xl font-bold tracking-tight text-ink sm:text-4xl">Where I've been building</h2>
-      <div class="mt-10 grid gap-10 lg:grid-cols-[2fr_1fr]">
-        <ol class="relative space-y-8 border-l-2 border-indigo-100 pl-6">
+    <section id="experience" aria-labelledby="exp-h" class="mx-auto max-w-[1280px] px-5 py-20 sm:px-10 lg:py-28">
+      <h2 id="exp-h" class="h-sec border-b border-sch-line pb-10">Where I've been building</h2>
+      <div class="grid gap-12 lg:grid-cols-12">
+        <ol class="lg:col-span-8">
           {experience.map((e) => (
-            <li class="relative">
-              <span aria-hidden="true" class="absolute -left-[33px] top-1.5 h-4 w-4 rounded-full border-4 border-white bg-accent"></span>
-              <div class="flex flex-wrap items-baseline justify-between gap-2">
-                <h3 class="text-lg font-bold text-ink">{e.role} <span class="font-medium text-slate-500">· {e.org}</span></h3>
-                <p class="text-sm text-slate-500">{e.period}</p>
+            <li class="relative grid gap-3 border-b border-sch-line py-8 sm:grid-cols-[11rem_1fr] sm:gap-8" data-io>
+              <span class="trace absolute -bottom-px left-0 w-full" aria-hidden="true"></span>
+              <p class="spec pt-1 text-[12px] text-sch-tx2">{e.period}</p>
+              <div>
+                <h3 class="text-[1.3rem] leading-tight font-semibold">{e.role} <span class="font-normal text-sch-tx2">· {e.org}</span></h3>
+                <ul class="mt-3 space-y-2 text-[15px] leading-snug text-sch-tx2">{e.points.map((pt) => <li class="grid grid-cols-[14px_1fr] gap-2"><span aria-hidden="true" class="mt-[8px] h-px w-2 bg-sig"></span>{pt}</li>)}</ul>
               </div>
-              <ul class="mt-2 space-y-1 text-sm text-slate-600">
-                {e.points.map((pt) => <li class="flex gap-2"><span aria-hidden="true" class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-400"></span>{pt}</li>)}
-              </ul>
             </li>
           ))}
         </ol>
-        <div>
-          <h3 class="text-lg font-bold text-ink">Education</h3>
-          <ul class="mt-4 space-y-4">
+        <div class="lg:col-span-4 lg:pt-8">
+          <h3 class="lbl">Education</h3>
+          <ul class="mt-3 border-t border-sch-line">
             {education.map((ed) => (
-              <li class="rounded-xl border border-slate-200 p-4">
-                <p class="font-semibold text-ink">{ed.degree}</p>
-                <p class="text-sm text-slate-600">{ed.school}</p>
-                <p class="text-xs text-slate-500">{ed.period}</p>
-              </li>
+              <li class="border-b border-sch-line py-4"><p class="font-semibold leading-snug">{ed.degree}</p><p class="text-[14.5px] text-sch-tx2">{ed.school}</p><p class="spec mt-1 text-[11.5px] text-sch-tx2">{ed.period}</p></li>
             ))}
           </ul>
         </div>
@@ -219,22 +238,68 @@ const mailto = `mailto:${person.email}?subject=${encodeURIComponent('Project enq
     </section>
 
     <!-- CONTACT -->
-    <section id="contact" aria-labelledby="contact-h" class="bg-ink py-20 text-slate-300">
-      <div class="mx-auto max-w-4xl px-5 text-center">
-        <p class="text-sm font-semibold uppercase tracking-widest text-indigo-300">Contact</p>
-        <h2 id="contact-h" class="mt-2 text-3xl font-bold tracking-tight text-white sm:text-5xl">Have a project in mind?</h2>
-        <p class="mx-auto mt-4 max-w-2xl text-lg">Tell me what you want to build and your timeline. I work from India ({person.timezone}) with clients worldwide.</p>
-        <a href={mailto} class="mt-8 inline-block rounded-full bg-accent px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-indigo-900/50 hover:bg-indigo-500">{person.email}</a>
-        <ul class="mt-8 flex flex-wrap justify-center gap-6 text-sm">
-          <li><a href={person.github} class="hover:text-white">GitHub</a></li>
-          <li><a href={person.linkedin} class="hover:text-white">LinkedIn</a></li>
-          <li>{person.location}</li>
-        </ul>
+    <section id="contact" aria-labelledby="contact-h" class="border-t border-sch-line">
+      <div class="mx-auto grid max-w-[1280px] gap-10 px-5 py-20 sm:px-10 lg:grid-cols-12 lg:py-28">
+        <div class="lg:col-span-7">
+          <h2 id="contact-h" class="text-[clamp(2.6rem,6vw,4.8rem)] leading-[.98] font-semibold tracking-[-0.035em]">Have a project in mind?</h2>
+          <p class="mt-6 max-w-[56ch] text-[17px] leading-relaxed text-sch-tx2">Tell me what you want to build and your timeline. I work from India ({person.timezone}) with clients worldwide.</p>
+        </div>
+        <div class="flex flex-col justify-end lg:col-span-5">
+          <a href={mailto} class="group flex items-center justify-between gap-4 border border-sig px-5 py-5 transition-colors hover:bg-sig hover:text-black sm:px-6">
+            <span class="spec min-w-0 text-[clamp(.85rem,2.6vw,1.05rem)] break-all">{person.email}</span>
+            <svg class="shrink-0 transition-transform duration-300 group-hover:translate-x-1" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
+          </a>
+          <ul class="mt-6 flex flex-wrap gap-x-8 gap-y-2 text-[15px]">
+            <li><a href={person.github} class="lnk">GitHub</a></li>
+            <li><a href={person.linkedin} class="lnk">LinkedIn</a></li>
+            <li class="text-sch-tx2">{person.location}</li>
+          </ul>
+        </div>
       </div>
     </section>
   </main>
 
-  <footer class="border-t border-white/10 bg-ink py-6 text-center text-xs text-slate-400">
+  <footer class="border-t border-sch-line py-6 text-center text-[12.5px] text-sch-tx2">
     © {new Date().getFullYear()} {person.name}. Product names and screenshots belong to Asemita Technologies.
   </footer>
+
+  <script>
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduce) {
+      const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
+      document.querySelectorAll('[data-io]').forEach((el) => io.observe(el));
+
+      // Packet runs the pipeline on whichever diagram is visible; loop only while on screen and tab visible.
+      document.querySelectorAll<SVGSVGElement>('[data-dia]').forEach((svg) => {
+        const path = svg.querySelector<SVGPathElement>('[data-path]');
+        const pkt = svg.querySelector<SVGCircleElement>('[data-pkt]');
+        if (!path || !pkt) return;
+        let raf = 0, len = 0; const t0 = performance.now() + 2100;
+        const tick = (now: number) => {
+          if (now > t0) {
+            if (!len) len = path.getTotalLength();
+            const u = ((now - t0) % 2800) / 2800, e = 1 - Math.pow(1 - u, 2.2), pt = path.getPointAtLength(e * len);
+            pkt.setAttribute('cx', String(pt.x)); pkt.setAttribute('cy', String(pt.y));
+            pkt.style.opacity = u > 0.9 ? String((1 - u) / 0.1) : '1';
+          }
+          raf = requestAnimationFrame(tick);
+        };
+        new IntersectionObserver(([en]) => {
+          cancelAnimationFrame(raf);
+          if (en.isIntersecting && svg.getBoundingClientRect().width > 0) raf = requestAnimationFrame(tick);
+        }).observe(svg);
+        document.addEventListener('visibilitychange', () => { cancelAnimationFrame(raf); if (!document.hidden) raf = requestAnimationFrame(tick); });
+      });
+    } else {
+      document.querySelectorAll('[data-io]').forEach((el) => el.classList.add('in'));
+    }
+
+    // Current section in the nav.
+    const links = new Map(Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-nav]')).map((a) => [a.hash.slice(1), a]));
+    const sio = new IntersectionObserver((es) => es.forEach((e) => {
+      const a = links.get(e.target.id); if (!a || !e.isIntersecting) return;
+      links.forEach((l) => l.removeAttribute('aria-current')); a.setAttribute('aria-current', 'true');
+    }), { rootMargin: '-45% 0px -50% 0px' });
+    links.forEach((_, id) => { const s = document.getElementById(id); if (s) sio.observe(s); });
+  </script>
 </Layout>
